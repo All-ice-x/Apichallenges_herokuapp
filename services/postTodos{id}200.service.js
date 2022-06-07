@@ -2,14 +2,14 @@ import supertest from 'supertest';
 import urls from '../config/urls';
 
 
-const PostTodos400 = {
+const PostTodosId200 = {
     post: async() => {
         const response = await supertest(urls.challenge)
-        .post('/todos')
-        .send({"title": "some test todo","doneStatus": "ok","description": "some test todo"})
+        .post('/todos/950')
+        .send({"description": "updating description"})
         .set('Accept', 'application/json');
         return response;
     }
 }; 
 
-export default PostTodos400;
+export default PostTodosId200;

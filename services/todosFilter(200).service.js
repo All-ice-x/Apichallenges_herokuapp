@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import urls from '../config/urls';
 
-const todosFilter = {
+const TodosFilter = {
     get: async(token) => {
         const response = await supertest(urls.challenge)
         .get('/todos?doneStatus=true')
@@ -11,4 +11,4 @@ const todosFilter = {
     }
 }; 
 
-export default todosFilter;
+export default TodosFilter;

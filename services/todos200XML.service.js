@@ -1,14 +1,14 @@
 import supertest from 'supertest';
 import urls from '../config/urls';
 
-const TodosId200 = {
+const Todos200XML = {
     get: async(token) => {
         const response = await supertest(urls.challenge)
-        .get('/todos/952')
-        .set('Accept', 'application/json')
+        .get('/todos')
+        .set('Accept', 'application/xml')
         .set('X-CHALLENGER', token);
         return response;
     }
 }; 
 
-export default TodosId200;
+export default Todos200XML;

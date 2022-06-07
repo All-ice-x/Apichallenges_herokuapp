@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import urls from '../config/urls';
 
-const headTodos = {
+const HeadTodos = {
     head: async(token) => {
         const response = await supertest(urls.challenge)
         .head('/todos')
@@ -11,4 +11,4 @@ const headTodos = {
     }
 }; 
 
-export default headTodos;
+export default HeadTodos;
