@@ -2,12 +2,6 @@ import chai from 'chai';
 import Challenger from '../services/challenger.service';
 import Challenges from '../services/challenges.service';
 import Todos from '../services/todos.service';
-import Todo from '../services/todo.service';
-import TodosId200 from '../services/todos{id}(200).service';
-import TodosId404 from '../services/todos{id}(404).service';
-import PostTodosId200 from '../services/postTodos{id}200.service';
-import DeleteTodosId200 from '../services/deleteTodos{id}(200).service';
-import Todos200XML from '../services/todos200XML.service';
 
 const assert = chai.assert;
 
@@ -22,28 +16,56 @@ describe.only ('Отправляем сетевые запросы', () => {
             console.log(`https://apichallenges.herokuapp.com/gui/challenges/${token}`);
             });
     });
+
+    /* 
+    получаем {id} для последующего использования в методах:
+    get todos/{id};
+    post todos/{id}; 
+    delete todos/{id}.
+    */
+
+    let id; 
+    before ('Создать запись todo', async () => {
+        let body = {
+            "title": "some test todo",
+            "doneStatus": true,
+            "description": "some test todo 123"
+        };
+        let path = '/todos';
+        const r = await Todos.post(body, path);
+        id = r._body["id"];
+    });
+
+
+// тесты:
+
     it ('Получить список заданий, 200', async () => {
         const r = await Challenges.get(token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
-    it ('Получить все todos + результат в формате JSON, 200', async () => {
-        const r = await Todos.get(token);
+
+    it ('Получить все todos (результат в формате JSON), 200', async () => {
+        let path = '/todos';
+        const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
-    it ('Вызвать /todo, 404', async () => {
-        const r = await Todo.get(token);
+    it ('Вызвать несуществующий endpoint /todo, 404', async () => {
+        let path = '/todo';
+        const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 404, 'statusCode не 404');
     });
 
-    it ('Получить todos по ID, 200', async () => {
-        const r = await TodosId200.get(token);
+    it ('Получить todo по ID, 200', async () => {
+        let path = `/todos/${id}`;
+        const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
-    it ('Получить todos по ID, 404', async () => {
-        const r = await TodosId404.get(token);
+    it ('Получить todo по ID, 404', async () => {
+        let path = '/todos/0';
+        const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 404, 'statusCode не 404');
     });
 
@@ -53,27 +75,47 @@ describe.only ('Отправляем сетевые запросы', () => {
     });
 
     it ('Создать todo, 201', async () => {
-        const r = await Todos.post(token);
+        let body = {
+            "title": "some test todo",
+            "doneStatus": true,
+            "description": "some test todo 123"
+        };
+        let path = '/todos';
+        const r = await Todos.post(body, path);
         assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
     });
 
-    it ('Отфильтровать todos по doneStatus, 200', async () => {
-        const r = await Todos.get(token);
+    it ('Отфильтровать todos по doneStatus=true, 200', async () => {
+        let path = '/todos?doneStatus=true';
+        const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
-    it ('Получить ошибку по doneStatus на POST todos, 400', async () => {
-        const r = await Todos.post(token);
+    it ('Получить ошибку по doneStatus на POST todo, 400', async () => {
+        let body = {
+            "title": "some test todo",
+            "doneStatus": "ok",
+            "description": "some test todo 111"
+        };
+        let path = '/todos';
+        const r = await Todos.post(body, path);
         assert.strictEqual(r.statusCode, 400, 'statusCode не 400');
     });
 
     it ('Обновить данные в todos/{id}, 200', async () => {
-        const r = await PostTodosId200.post(token);
+        let path = `/todos/${id}`;
+        let body = {
+            "title": "UPDATE some test todo",
+            "doneStatus": true,
+            "description": "some test todo update"
+        };
+        const r = await Todos.post(body, path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
     it ('Удалить запись todos/{id}, 200', async () => {
-        const r = await DeleteTodosId200.delete(token);
+        let path = `/todos/${id}`;
+        const r = await Todos.delete(path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
@@ -82,8 +124,10 @@ describe.only ('Отправляем сетевые запросы', () => {
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
     
-    it ('Получить результат в формате XML /todos, 200', async () => {
-        const r = await Todos200XML.get(token);
+    it ('Получить все todos (результат в формате XML), 200', async () => {
+        let path = '/todos';
+        let format = 'application/xml';
+        const r = await Todos.get(token, path, format);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 });

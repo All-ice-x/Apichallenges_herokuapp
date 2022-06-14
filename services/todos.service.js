@@ -2,26 +2,18 @@ import supertest from 'supertest';
 import urls from '../config/urls';
 
 const Todos = {
-    get: async(token) => {
+    get: async(token, path, format = 'application/json', accept = 'Accept') => {
         const response = await supertest(urls.challenge)
-        .get('/todos')
-        .set('Accept', 'application/json')
+        .get(path)
+        .set(accept, format)
         .set('X-CHALLENGER', token);
         return response;
     },
 
-    post: async() => {
+    post: async(body, path) => {
         const response = await supertest(urls.challenge)
-        .post('/todos')
-        .send({"title": "some test todo","doneStatus": true,"description": "some test todo"});
-        return response;
-    },
-
-    get: async(token) => {
-        const response = await supertest(urls.challenge)
-        .get('/todos?doneStatus=true')
-        .set('Accept', 'application/xml')
-        .set('X-CHALLENGER', token);
+        .post(path)
+        .send(body);
         return response;
     },
 
@@ -39,14 +31,12 @@ const Todos = {
         return response;
     },
 
-    post: async() => {
+    delete: async(path) => {
         const response = await supertest(urls.challenge)
-        .post('/todos')
-        .send({"title": "some test todo","doneStatus": "ok","description": "some test todo"})
+        .delete(path)
         return response;
     }
-
-
 }; 
+
 
 export default Todos;
