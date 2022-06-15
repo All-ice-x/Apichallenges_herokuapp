@@ -10,9 +10,11 @@ const Todos = {
         return response;
     },
 
-    post: async(body, path) => {
+    post: async(body, path, format = 'application/json', contentType = 'application/json') => {
         const response = await supertest(urls.challenge)
         .post(path)
+        .set('Content-Type', contentType)
+        .set('Accept', format)
         .send(body);
         return response;
     },

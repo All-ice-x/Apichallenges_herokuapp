@@ -129,5 +129,65 @@ describe.only ('Отправляем сетевые запросы', () => {
         let format = 'application/xml';
         const r = await Todos.get(token, path, format);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
+       // console.log(r);
     });
+    
+    it ('Получить все todos (формат результата any), 200', async () => {
+        let path = '/todos';
+        let format = '*/*';
+        const r = await Todos.get(token, path, format);
+        assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
+    });
+
+    it ('Получить все todos (предпочтительный формат результата XML), 200', async () => {
+        let path = '/todos';
+        let format = 'application/xml, application/json';
+        const r = await Todos.get(token, path, format);
+        assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
+    });
+
+    it ('Получить все todos (no accept), 200', async () => {
+        let path = '/todos';
+        let accept = '';
+        const r = await Todos.get(token, path, accept);
+        assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
+    });
+
+    it ('Получить все todos (некорректный header), 406', async () => {
+        let path = '/todos';
+        let format = 'application/gzip';
+        const r = await Todos.get(token, path, format);
+        assert.strictEqual(r.statusCode, 406, 'statusCode не 406');
+    });
+
+    it ('Создать todo (формат body XML), 201', async () => {
+        let path = '/todos';
+        let body = 
+            '<todo><doneStatus>true</doneStatus><title>another test todo</title><description>Create Todo (body: XML)</description></todo>';
+        let format = 'application/xml'
+        let contentType = 'application/xml';
+        const r = await Todos.post(body, path, format, contentType);
+        assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
+    });
+
+    it ('Создать todo (формат body JSON), 201', async () => {
+        let path = '/todos';
+        let body = {
+            "title": "Create test todo (body: JSON)",
+            "doneStatus": true,
+            "description": "Create test todo (body: JSON)"
+        };
+        const r = await Todos.post(body, path);
+        assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
+    });
+
+    it ('Создать todo (формат body некорректен), 415', async () => {
+        let path = '/todos';
+        let body = '<todo><doneStatus>true</doneStatus><title>todo with unsupported content type</title></todo>';
+        let format = 'application/xml'
+        let contentType = 'application/qwe';
+        const r = await Todos.post(body, path, format, contentType);
+        assert.strictEqual(r.statusCode, 415, 'statusCode не 415');
+    });
+
 });
