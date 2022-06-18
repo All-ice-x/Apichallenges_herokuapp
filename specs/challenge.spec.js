@@ -2,6 +2,7 @@ import chai from 'chai';
 import Challenger from '../services/challenger.service';
 import Challenges from '../services/challenges.service';
 import Todos from '../services/todos.service';
+import TodoBuilder from '../fixtures/builder/todo';
 
 const assert = chai.assert;
 
@@ -58,6 +59,7 @@ describe.only ('Отправляем сетевые запросы', () => {
     });
 
     it ('Получить todo по ID, 200', async () => {
+        const todo = new TodoBuilder().setName().setDescription().setDoneStatus('false').build();
         let path = `/todos/${id}`;
         const r = await Todos.get(token, path);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
