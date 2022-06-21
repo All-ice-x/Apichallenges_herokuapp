@@ -9,7 +9,7 @@ let getNewTodo = function(title, description, doneStatus){
 let TodoBuilder = function () {
 return { 
     setName: function () {
-        this.title = faker.internet.domainName();
+        this.title = faker.internet.userName();
         return this;
     },
     setDescription: function () {
@@ -22,7 +22,7 @@ return {
     },
 
     build: function (){
-        console.log(this);
+    //  console.log(this);
         return new getNewTodo(this.title, this.description, this.doneStatus);
     }
 }

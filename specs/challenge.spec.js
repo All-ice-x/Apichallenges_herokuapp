@@ -2,10 +2,14 @@ import chai from 'chai';
 import Challenger from '../services/challenger.service';
 import Challenges from '../services/challenges.service';
 import Todos from '../services/todos.service';
+import Todo from '../services/todo.service';
+import TodosId from '../services/todosId.service';
 import TodoBuilder from '../fixtures/builder/todo';
 
 const assert = chai.assert;
 
+// Getting Started
+// 01
 describe.only ('Отправляем сетевые запросы', () => {
     let token;
     before ('Получить токен', async () => {
@@ -18,178 +22,166 @@ describe.only ('Отправляем сетевые запросы', () => {
             });
     });
 
-    /* 
-    получаем {id} для последующего использования в методах:
-    get todos/{id};
-    post todos/{id}; 
-    delete todos/{id}.
-    */
-
-    let id; 
-    before ('Создать запись todo', async () => {
-        let body = {
-            "title": "some test todo",
-            "doneStatus": true,
-            "description": "some test todo 123"
-        };
-        let path = '/todos';
-        const r = await Todos.post(body, path);
-        id = r._body["id"];
-    });
-
-
-// тесты:
-
+// Challenges:
+// 02
     it ('Получить список заданий, 200', async () => {
         const r = await Challenges.get(token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
-
+// 03 & 15
     it ('Получить все todos (результат в формате JSON), 200', async () => {
-        let path = '/todos';
-        const r = await Todos.get(token, path);
+        const r = await Todos.get(token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 04
     it ('Вызвать несуществующий endpoint /todo, 404', async () => {
-        let path = '/todo';
-        const r = await Todos.get(token, path);
+        const r = await Todo.get(token);
         assert.strictEqual(r.statusCode, 404, 'statusCode не 404');
     });
 
+// 05
     it ('Получить todo по ID, 200', async () => {
-        const todo = new TodoBuilder().setName().setDescription().setDoneStatus('false').build();
-        let path = `/todos/${id}`;
-        const r = await Todos.get(token, path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(false).build();
+        let r = await Todos.post(body, token);
+        r = await TodosId.get(r._body.id, token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 06
     it ('Получить todo по ID, 404', async () => {
-        let path = '/todos/0';
-        const r = await Todos.get(token, path);
+        const id = '0';
+        const r = await TodosId.get(id, token);
         assert.strictEqual(r.statusCode, 404, 'statusCode не 404');
     });
 
+// 07
     it ('Получить HEAD /todos, 200', async () => {
         const r = await Todos.head(token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 08
     it ('Создать todo, 201', async () => {
-        let body = {
-            "title": "some test todo",
-            "doneStatus": true,
-            "description": "some test todo 123"
-        };
-        let path = '/todos';
-        const r = await Todos.post(body, path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(true).build();
+        const r = await Todos.post(body, token);
         assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
     });
 
+// 09
     it ('Отфильтровать todos по doneStatus=true, 200', async () => {
-        let path = '/todos?doneStatus=true';
-        const r = await Todos.get(token, path);
+        const status = '?doneStatus=true';
+        const r = await Todos.status(token, status);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 10
     it ('Получить ошибку по doneStatus на POST todo, 400', async () => {
-        let body = {
-            "title": "some test todo",
-            "doneStatus": "ok",
-            "description": "some test todo 111"
-        };
-        let path = '/todos';
-        const r = await Todos.post(body, path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus('ok').build();
+        const r = await Todos.post(body, token);
         assert.strictEqual(r.statusCode, 400, 'statusCode не 400');
     });
 
+// 11
     it ('Обновить данные в todos/{id}, 200', async () => {
-        let path = `/todos/${id}`;
-        let body = {
-            "title": "UPDATE some test todo",
-            "doneStatus": true,
-            "description": "some test todo update"
-        };
-        const r = await Todos.post(body, path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(true).build();
+        let r = await Todos.post(body, token);
+        r = await TodosId.post(r._body.id, body, token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 12
     it ('Удалить запись todos/{id}, 200', async () => {
-        let path = `/todos/${id}`;
-        const r = await Todos.delete(path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(true).build();
+        let r = await Todos.post(body, token);
+        r = await TodosId.delete(r._body.id, token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 13
     it ('Получить OPTIONS /todos, 200', async () => {
         const r = await Todos.options(token);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
-    
+
+// 14
     it ('Получить все todos (результат в формате XML), 200', async () => {
-        let path = '/todos';
-        let format = 'application/xml';
-        const r = await Todos.get(token, path, format);
+        const format = 'application/xml';
+        const r = await Todos.get(token, format);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
        // console.log(r);
     });
-    
+
+// 16
     it ('Получить все todos (формат результата any), 200', async () => {
-        let path = '/todos';
-        let format = '*/*';
-        const r = await Todos.get(token, path, format);
+        const format = '*/*';
+        const r = await Todos.get(token, format);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 17
     it ('Получить все todos (предпочтительный формат результата XML), 200', async () => {
-        let path = '/todos';
-        let format = 'application/xml, application/json';
-        const r = await Todos.get(token, path, format);
+        const format = 'application/xml, application/json';
+        const r = await Todos.get(token, format);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 18
     it ('Получить все todos (no accept), 200', async () => {
-        let path = '/todos';
-        let accept = '';
-        const r = await Todos.get(token, path, accept);
+        const accept = '';
+        const r = await Todos.get(token, accept);
         assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
     });
 
+// 19
     it ('Получить все todos (некорректный header), 406', async () => {
-        let path = '/todos';
-        let format = 'application/gzip';
-        const r = await Todos.get(token, path, format);
+        const format = 'application/gzip';
+        const r = await Todos.get(token, format);
         assert.strictEqual(r.statusCode, 406, 'statusCode не 406');
     });
 
+// 20
     it ('Создать todo (формат body XML), 201', async () => {
-        let path = '/todos';
-        let body = 
+        const body = 
             '<todo><doneStatus>true</doneStatus><title>another test todo</title><description>Create Todo (body: XML)</description></todo>';
-        let format = 'application/xml'
-        let contentType = 'application/xml';
-        const r = await Todos.post(body, path, format, contentType);
+        const format = 'application/xml'
+        const contentType = 'application/xml';
+        const r = await Todos.post(body, token, format, contentType);
         assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
     });
 
+// 21
     it ('Создать todo (формат body JSON), 201', async () => {
-        let path = '/todos';
-        let body = {
-            "title": "Create test todo (body: JSON)",
-            "doneStatus": true,
-            "description": "Create test todo (body: JSON)"
-        };
-        const r = await Todos.post(body, path);
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(true).build();
+        const r = await Todos.post(body, token);
         assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
     });
 
-    it ('Создать todo (формат body некорректен), 415', async () => {
-        let path = '/todos';
-        let body = '<todo><doneStatus>true</doneStatus><title>todo with unsupported content type</title></todo>';
-        let format = 'application/xml'
-        let contentType = 'application/qwe';
-        const r = await Todos.post(body, path, format, contentType);
+// 22
+    it ('Создать todo (формат contentType некорректен), 415', async () => {
+        const body = '<todo><doneStatus>true</doneStatus><title>todo with unsupported content type</title></todo>';
+        const format = 'application/xml'
+        const contentType = 'application/qwe';
+        const r = await Todos.post(body, token, format, contentType);
         assert.strictEqual(r.statusCode, 415, 'statusCode не 415');
     });
 
+// 23
+    it ('Создать todo c Content-Type "application/xml", но Accept "application/json", 400', async () => {
+        const body = '<todo><doneStatus>true</doneStatus><title>todo with unsupported content type</title></todo>';
+        const format = 'application/json';
+        const contentType = 'application/xml';
+        const r = await Todos.post(body, token, format, contentType);
+        assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
+    });
+
+// 24 
+    it ('Создать todo c Content-Type "application/json", но Accept "application/xml", 400', async () => {
+        const body = new TodoBuilder().setName().setDescription().setDoneStatus(false).build();
+        const format = 'application/xml';
+        const contentType = 'application/json';
+        const r = await Todos.post(body, token, format, contentType);
+        assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
+    });
 });
