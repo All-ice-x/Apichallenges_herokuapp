@@ -1,5 +1,7 @@
+import { allure } from 'allure-mocha/dist/MochaAllureReporter';
 import supertest from 'supertest';
 import urls from '../config/urls';
+import { loadApiSpec, validate } from '../lib/validator';
 
 const Todos = {
     get: async(token, format = 'application/json', accept = 'Accept') => {
@@ -7,6 +9,14 @@ const Todos = {
         .get('/todos')
         .set(accept, format)
         .set('X-CHALLENGER', token);
+        allure.attachment('response', JSON.stringify(response.body), 'application/json');
+
+       // const apiSpec = await loadApiSpec('../apichallenges.herokuapp/lib/Simple-Todo-List-swagger.json');
+        
+        const apiSpec = await loadApiSpec('https://apichallenges.herokuapp.com/docs/swagger');
+        const schema = apiSpec.paths['/todos'].get.responses[200];
+        validate(schema, response.body);
+
         return response;
     },
 
@@ -15,6 +25,12 @@ const Todos = {
         .get(`/todos${status}`)
         .set(accept, format)
         .set('X-CHALLENGER', token);
+        allure.attachment('response', JSON.stringify(response.body), 'application/json');
+
+        const apiSpec = await loadApiSpec('https://apichallenges.herokuapp.com/docs/swagger');
+        const schema = apiSpec.paths['/todos'].get.responses[200];
+        validate(schema, response.body);
+
         return response;
     },
 
@@ -25,6 +41,12 @@ const Todos = {
         .set('Accept', format)
         .set('X-CHALLENGER', token)
         .send(body);
+        allure.attachment('response', JSON.stringify(response.body), 'application/json');
+
+        const apiSpec = await loadApiSpec('https://apichallenges.herokuapp.com/docs/swagger');
+        const schema = apiSpec.paths['/todos'].post.responses[201];
+        validate(schema, response.body);
+
         return response;
     },
 
@@ -32,6 +54,12 @@ const Todos = {
         const response = await supertest(urls.challenge)
         .head('/todos')
         .set('X-CHALLENGER', token);
+        allure.attachment('response', JSON.stringify(response.body), 'application/json');
+
+        const apiSpec = await loadApiSpec('https://apichallenges.herokuapp.com/docs/swagger');
+        const schema = apiSpec.paths['/todos'].head.responses[200];
+        validate(schema, response.body);
+
         return response;
     },
 
@@ -39,15 +67,15 @@ const Todos = {
         const response = await supertest(urls.challenge)
         .options('/todos')
         .set('X-CHALLENGER', token);
+        allure.attachment('response', JSON.stringify(response.body), 'application/json');
+
+        const apiSpec = await loadApiSpec('https://apichallenges.herokuapp.com/docs/swagger');
+        const schema = apiSpec.paths['/todos'].options.responses[200];
+        validate(schema, response.body);
+
         return response;
     },
 
-    delete: async(path) => {
-        const response = await supertest(urls.challenge)
-        .delete(path)
-        .set('X-CHALLENGER', token);
-        return response;
-    }
 }; 
 
 

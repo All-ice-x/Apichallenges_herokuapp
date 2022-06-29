@@ -1,0 +1,339 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Simple Todo List",
+    "description": "A Simple todo list",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://apichallenges.herokuapp.com",
+      "description": "heroku hosted version"
+    },
+    {
+      "url": "http://localhost:4567",
+      "description": "local execution"
+    }
+  ],
+  "paths": {
+    "/todos": {
+      "get": {
+        "description": "return all the instances of todo",
+        "responses": {
+          "200": {
+            "description": "All the todos"
+          }
+        }
+      },
+      "put": {
+        "description": "method not allowed",
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      },
+      "post": {
+        "description": "we should be able to create todo without a ID using the field values in the body of the message",
+        "responses": {
+          "201": {
+            "description": "Created a todo"
+          },
+          "400": {
+            "description": "Error when creating a todo"
+          }
+        }
+      },
+      "delete": {
+        "description": "method not allowed",
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      },
+      "options": {
+        "description": "show all Options for endpoint of todos",
+        "responses": {
+          "200": {
+            "description": "the endpoint verb options"
+          }
+        }
+      },
+      "head": {
+        "description": "headers for all the instances of todo",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "description": "method not allowed",
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/todos/:id": {
+      "get": {
+        "description": "return a specific instances of todo using a id",
+        "responses": {
+          "200": {
+            "description": "A specific todo"
+          },
+          "404": {
+            "description": "Could not find a specific todo"
+          }
+        }
+      },
+      "put": {
+        "description": "amend a specific instances of todo using a id with a body containing the fields to amend",
+        "responses": {
+          "200": {
+            "description": "Replaced the specific todo details"
+          },
+          "404": {
+            "description": "Could not find a specific todo"
+          }
+        }
+      },
+      "post": {
+        "description": "amend a specific instances of todo using a id with a body containing the fields to amend",
+        "responses": {
+          "200": {
+            "description": "Amended the specific todo"
+          },
+          "404": {
+            "description": "Could not find a specific todo"
+          }
+        }
+      },
+      "delete": {
+        "description": "delete a specific instances of todo using a id",
+        "responses": {
+          "200": {
+            "description": "Deleted a specific todo"
+          },
+          "404": {
+            "description": "Could not find a specific todo"
+          }
+        }
+      },
+      "options": {
+        "description": "show all Options for endpoint of todos/:id",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "head": {
+        "description": "headers for a specific instances of todo using a id",
+        "responses": {
+          "200": {
+            "description": "Headers for a specific todo"
+          },
+          "404": {
+            "description": "Could not find a specific todo"
+          }
+        }
+      },
+      "patch": {
+        "description": "method not allowed",
+        "responses": {
+          "405": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    },
+    "/challenger": {
+      "post": {
+        "description": "Create an X-CHALLENGER guid to allow tracking challenges, use the X-CHALLENGER header in all requests to track challenge completion for multi-user tracking.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error processing request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/challenger/:guid": {
+      "get": {
+        "description": "Restore a saved challenger matching the supplied X-CHALLENGER guid to allow continued tracking of challenges.",
+        "responses": {
+          "204": {
+            "description": "OK, No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/challenges": {
+      "get": {
+        "description": "Get list of challenges and their completion status",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "options": {
+        "description": "Options for list of challenges endpoint",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "head": {
+        "description": "Headers for list of challenges endpoint",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/heartbeat": {
+      "get": {
+        "description": "Is the server running? YES 204",
+        "responses": {
+          "204": {
+            "description": "OK, No Content"
+          }
+        }
+      },
+      "options": {
+        "description": "Options for heartbeat endpoint",
+        "responses": {
+          "204": {
+            "description": "OK, No Content"
+          }
+        }
+      },
+      "head": {
+        "description": "Headers for heartbeat endpoint",
+        "responses": {
+          "204": {
+            "description": "OK, No Content"
+          }
+        }
+      }
+    },
+    "/secret/token": {
+      "post": {
+        "description": "POST /secret/token with basic auth to get a secret/token to use as X-AUTH-TOKEN header, to allow access to the /secret/note end points.",
+        "responses": {
+          "201": {
+            "description": "OK, Created"
+          },
+          "401": {
+            "description": "Standard Status Code Meaning"
+          }
+        }
+      }
+    },
+    "/secret/note": {
+      "get": {
+        "description": "GET /secret/note with X-AUTH-TOKEN to return the secret note for the user.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Standard Status Code Meaning"
+          },
+          "403": {
+            "description": "Standard Status Code Meaning"
+          }
+        }
+      },
+      "post": {
+        "description": "POST /secret/note with X-AUTH-TOKEN, and a payload of `{\u0027note\u0027:\u0027contents of note\u0027}` to amend the contents of the secret note.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Error processing request"
+          },
+          "401": {
+            "description": "Standard Status Code Meaning"
+          },
+          "403": {
+            "description": "Standard Status Code Meaning"
+          }
+        }
+      }
+    },
+    "/mirror/request": {
+      "get": {
+        "description": "Mirror a GET Request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "description": "Mirror a PUT Request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "Mirror a POST Request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "Mirror a DELETE Request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "options": {
+        "description": "Options for mirror endpoint",
+        "responses": {
+          "204": {
+            "description": "OK, No Content"
+          }
+        }
+      },
+      "head": {
+        "description": "Headers for mirror endpoint",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "description": "Mirror a PATCH Request",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
