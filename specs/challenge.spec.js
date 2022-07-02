@@ -32,7 +32,7 @@ describe.only ('Отправляем сетевые запросы', () => {
 // 03 & 15
     it ('Получить все todos (результат в формате JSON), 200', async () => {
         const r = await Todos.get(token);
-        assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
+        assert.strictEqual(r.statusCode, 400, 'statusCode не 200');
     });
 
 // 04
