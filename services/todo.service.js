@@ -1,6 +1,6 @@
 import { allure } from 'allure-mocha/dist/MochaAllureReporter';
 import supertest from 'supertest';
-import urls from '../config/urls';
+import { urls } from '../config/index';
 
 const Todo = {
   get: async (token, path, format = 'application/json', accept = 'Accept') => {

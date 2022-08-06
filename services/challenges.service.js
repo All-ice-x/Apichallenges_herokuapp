@@ -1,6 +1,6 @@
 import { allure } from 'allure-mocha/dist/MochaAllureReporter';
 import supertest from 'supertest';
-import urls from '../config/urls';
+import { urls } from '../config/index';
 import { loadApiSpec, validate } from '../lib/validator';
 
 const Challenges = {
