@@ -1,1 +1,0 @@
-{"uuid":"4b2bb93b-7525-45a1-aec5-d6b76099718e","historyId":"6877c8677cf3f9b4ccc989254bb6e6a9","status":"passed","statusDetails":{},"stage":"finished","steps":[],"attachments":[],"parameters":[],"labels":[{"name":"parentSuite","value":"Отправляем сетевые запросы"}],"links":[],"start":1655816272194,"name":"Создать todo, 201","fullName":"Создать todo, 201","stop":1655816272862}

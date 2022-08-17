@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import Challenger from './challenger.service';
 import Challenges from './challenges.service';
 import Todo from './todo.service';
