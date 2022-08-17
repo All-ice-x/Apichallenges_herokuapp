@@ -1,0 +1,1 @@
+{"uuid":"f288d7e0-ef60-4a5d-8df6-91631ee9b839","children":["e484a561-d6bc-4719-9111-b5ce813921d2"],"befores":[{"status":"passed","statusDetails":{},"stage":"finished","steps":[],"attachments":[],"parameters":[],"name":"\"before all\" hook: Получить токен"}],"afters":[],"name":"Отправляем сетевые запросы"}

@@ -1,4 +1,4 @@
-node_modules
-.DS_Store
-allure-results
-mochawesome-report
+# node_modules
+# .DS_Store
+# allure-results
+# mochawesome-report

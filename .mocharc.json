@@ -1,6 +1,6 @@
 {
     "require": "@babel/register",
-    "spec": "specs/**/challenge.spec.js",
+    "spec": "specs/**/advanced.spec.js",
     "timeout": "50000",
     "reporter": "mocha-multi-reporters",
     "reporterOptions": ["configFile=reporterConfig.json"],
