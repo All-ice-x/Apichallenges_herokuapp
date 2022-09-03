@@ -27,7 +27,7 @@ describe('Отправляем сетевые запросы', () => {
   // 03 & 15 тест сломан нарочно
   it('Получить все todos (результат в формате JSON), 200', async () => {
     const r = await api().Todos().get(token);
-    assert.strictEqual(r.statusCode, 400, 'statusCode не 200');
+    assert.strictEqual(r.statusCode, 400, 'statusCode не 200 (тест сломан нарочно!)');
   });
 
   // 04
