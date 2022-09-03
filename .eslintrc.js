@@ -11,5 +11,9 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['mocha'],
-  rules: { 'mocha/no-mocha-arrows': 0 },
+  rules: {
+    'linebreak-style': 0,
+    'mocha/no-mocha-arrows': 0,
+    'import/prefer-default-export': 0,
+  },
 };
