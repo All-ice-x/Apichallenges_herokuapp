@@ -5,6 +5,7 @@ import Todos from './todos.service';
 import TodosId from './todosId.service';
 import Heartbeat from './heartbeat.service';
 import SecretToken from './secretToken.service';
+import SecretNote from './secretNote.service';
 
 const api = () => ({
   Challenger: () => ({ ...Challenger }),
@@ -14,6 +15,7 @@ const api = () => ({
   TodosId: () => ({ ...TodosId }),
   Heartbeat: () => ({ ...Heartbeat }),
   SecretToken: () => ({ ...SecretToken }),
+  SecretNote: () => ({ ...SecretNote }),
 });
 
 export { api };

@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { urls } from '../config/index';
 
 const Todo = {
-  get: async (token, path, format = 'application/json', accept = 'Accept') => {
+  get: async (token) => {
     const response = await supertest(urls.challenge)
       .get('/todo')
       .set('X-CHALLENGER', token);

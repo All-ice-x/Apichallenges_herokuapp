@@ -34,7 +34,7 @@ describe('Отправляем сетевые запросы', () => {
 
     body.todos.forEach((item, index, array) => {
       console.log(`${JSON.stringify(item)} имеет позицию ${index} в массиве ${JSON.stringify(array)}`);
-      console.log('Здесь могла бы быть ваша рекалама');
+      console.log('Здесь могла бы быть ваша реклама');
 
       assert.strictEqual(item.doneStatus, false, 'Есть незавершённые задачи');
     });
