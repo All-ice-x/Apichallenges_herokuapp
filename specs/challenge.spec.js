@@ -24,7 +24,7 @@ describe('Отправляем сетевые запросы', () => {
     assert.strictEqual(r.statusCode, 200, 'statusCode не 200');
   });
 
-  // 03 & 15 тест сломан нарочно
+  // 03 & 15
   it('Получить все todos (результат в формате JSON), 200', async () => {
     const r = await api().Todos().get(token);
     assert.strictEqual(r.statusCode, 400, 'statusCode не 200 (тест сломан нарочно!)');
@@ -183,6 +183,44 @@ describe('Отправляем сетевые запросы', () => {
     const format = 'application/xml';
     const contentType = 'application/json';
     const r = await api().Todos().post(body, token, format, contentType);
+    assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
+  });
+
+  // 25
+  it('Получить ошибку "405 Method Not Allowed" для метода DELETE в /heartbeat, 405', async () => {
+    const r = await api().Heartbeat().delete(token);
+    assert.strictEqual(r.statusCode, 405, 'statusCode не 405');
+  });
+
+  // 26
+  it('Получить ошибку "500 Internal Server Error" для метода PATCH в /heartbeat, 500', async () => {
+    const r = await api().Heartbeat().patch(token);
+    assert.strictEqual(r.statusCode, 500, 'statusCode не 500');
+  });
+
+  // 27
+  it('Получить ошибку "501 Not Implemented" для метода TRACE в /heartbeat, 501', async () => {
+    const r = await api().Heartbeat().trace(token);
+    assert.strictEqual(r.statusCode, 501, 'statusCode не 501');
+  });
+
+  // 27
+  it('Получить ответ "204 No Content" для метода GET в /heartbeat, 204', async () => {
+    const r = await api().Heartbeat().get(token);
+    assert.strictEqual(r.statusCode, 204, 'statusCode не 204');
+  });
+
+  // 28
+  it('Получить ошибку "401 Unauthorized" в /secret/token, 401', async () => {
+    const auth = 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=';
+    const r = await api().SecretToken().post(auth, token);
+    assert.strictEqual(r.statusCode, 401, 'statusCode не 401');
+  });
+
+  // 29
+  it('Успешная аутентификация  в /secret/token, 201', async () => {
+    const auth = 'Basic YWRtaW46cGFzc3dvcmQ=';
+    const r = await api().SecretToken().post(auth, token);
     assert.strictEqual(r.statusCode, 201, 'statusCode не 201');
   });
 });
